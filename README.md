@@ -22,3 +22,7 @@ Shorten a URL by sending a request to http://localhost:8080?url=http://example.c
 The server will respond with a short URL.
 
 Set the port and host in little.js.
+
+## In action
+
+Go to [ltlr.us/?url=http://example.com](http://ltlr.us/?url=http://example.com)
