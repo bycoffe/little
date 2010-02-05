@@ -4,8 +4,10 @@ A URL shortener using Redis and Node.js
 
 ## Requirements
 
-redis-node-client (included)
+redis-node-client (included; authored by Brian Hammond, Fictorial)
+
 Node.js [http://nodejs.org](http://nodejs.org)
+
 Redis [http://github.com/antirez/redis](http://github.com/antirez/redis)
 
 ## Usage
