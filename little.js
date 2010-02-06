@@ -1,15 +1,50 @@
 /*
  * A URL shortener using Redis and Node.js.
  */
-var PORT = 8080;
-var HOST = 'localhost'
 
 var sys = require('sys'),
     http = require('http'),
     url_mod = require('url'),
     redis = require('./redis-node-client/redisclient');
 
+var showHelp = function() {
+    sys.puts('Usage: node little.js [options]\n');
+    sys.puts('Options:')
+    sys.puts('-p\tPort (default 8080)');
+    sys.puts('-s\tHost (default localhost)');
+    sys.puts('-db\tRedis database (default 5)');
+    process.exit();
+}
+
+
+var processArgs = function() {
+    var args = {
+        '-p': 8080,
+        '-s': 'localhost',
+        '-db': 5,
+    };
+    if (process.argv.length > 2) {
+        for (i=2;i< process.argv.length;i++) {
+            if (process.argv[i] in args) {
+                args[process.argv[i]] = process.argv[i+1];
+                i++;
+            } else if (process.argv[i].indexOf('-') == 0) {
+                sys.puts('Invalid argument given\n');
+                showHelp();
+            }
+        }
+    }
+    return args;
+}
+
+var args = processArgs();
+
+var PORT = args['-p'];
+var HOST = args['-s'];
+var DB = args['-db'];
+
 var client = new redis.Client();
+client.select(DB)
 
 var keyStr = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
@@ -39,7 +74,7 @@ http.createServer(function(req, res) {
                 // the encoded key.
                 if (val) {
                     res.sendHeader(200, {'Content-Type': 'text/plain'});
-                    res.sendBody('http://' + HOST + ':' + PORT + '/' + val);
+                    res.sendBody('http://' + HOST + '/' + val);
                     res.finish();
 
                 // This is a new URL.
@@ -67,7 +102,7 @@ http.createServer(function(req, res) {
                                 // Once the short and long URLs are stored, show
                                 // the short version.
                                 res.sendHeader(200, {'Content-Type': 'text/plain'});
-                                res.sendBody('http://' + HOST + ':' + PORT + '/' + encoded);
+                                res.sendBody('http://' + HOST + '/' + encoded);
                                 res.finish();
                             });
 
@@ -145,4 +180,4 @@ var baseEncode = function (input, keyStr) {
     return output;
 }
 
-sys.puts('Server running at http://' + HOST + ':' + PORT);
+//sys.puts('Server running at http://' + HOST + ':' + PORT);
