@@ -74,7 +74,11 @@ http.createServer(function(req, res) {
                 // the encoded key.
                 if (val) {
                     res.sendHeader(200, {'Content-Type': 'text/plain'});
-                    res.sendBody('http://' + HOST + '/' + val);
+                    if ('callback' in parsed.query) {
+                        res.sendBody("{'shorturl':'http://" + HOST + '/' + val + "'}");
+                    } else {
+                        res.sendBody('http://' + HOST + '/' + val);
+                    }
                     res.finish();
 
                 // This is a new URL.
@@ -102,7 +106,11 @@ http.createServer(function(req, res) {
                                 // Once the short and long URLs are stored, show
                                 // the short version.
                                 res.sendHeader(200, {'Content-Type': 'text/plain'});
-                                res.sendBody('http://' + HOST + '/' + encoded);
+                                if ('callback' in parsed.query) {
+                                    res.sendBody("{'shorturl':'http://" + HOST + '/' + encoded + "'}");
+                                } else {
+                                    res.sendBody('http://' + HOST + '/' + encoded);
+                                }
                                 res.finish();
                             });
 
