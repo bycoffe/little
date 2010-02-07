@@ -21,7 +21,9 @@ Shorten a URL by sending a request to http://localhost:8080?url=http://example.c
 
 The server will respond with a short URL.
 
-Set the port and host in little.js.
+By default, the server runs on port 8080 and uses Redis database No. 5. Different values can be given in command-line arguments:
+
+    $node little.js -p 8888 -db 2
 
 ## In action
 
