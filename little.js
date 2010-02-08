@@ -66,6 +66,11 @@ http.createServer(function(req, res) {
 
             var url = parsed.query.url;
 
+            // If the URL doesn't start with http, add it.
+            if (url.search(/^http/) == -1) {
+                url = 'http://' + url;
+            }
+
             // Check for whether there's a key for this URL.
             // This is so we don't store duplicates.
             client.get(url).addCallback(function (val) {
