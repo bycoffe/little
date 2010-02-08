@@ -120,6 +120,9 @@ http.createServer(function(req, res) {
 
                 }
 
+            }).addErrback(function(e) { 
+                res.sendHeader(500, {});
+                res.finish();
             });
 
         // There's no ?url= in the query. The client is
@@ -145,9 +148,12 @@ http.createServer(function(req, res) {
 
                 });
 
-            } else { // The request is for /. 404.
-                res.sendHeader(404, {});
-                res.finish();
+            } else { // The request is for /.
+                client.get('ids').addCallback(function(val) {
+                    res.sendHeader(200, {'Content-Type': 'text/plain'});
+                    res.sendBody(HOST + ' has shortened ' + val + ' URLs');
+                    res.finish();
+                });
             }
         }
 
